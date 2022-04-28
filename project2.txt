@@ -1,0 +1,431 @@
+Q1)CREATE SEQUENCE pur# START WITH 100001 INCREMENT BY 1; 
+CREATE SEQUENCE log# START WITH 1001 INCREMENT BY 1; 
+
+Q2)
+Table1)set serveroutput on
+declare   
+	v_cid customers.CID%type;  
+	v_name customers.name%type;  
+	v_telephone# customers.telephone#%type;  
+	v_vists_made customers.VISITS_MADE%type;  
+	v_LAST_VISIT_DATE customers.LAST_VISIT_DATE%type; 
+	v_refcursor sys_refcursor;  
+	v_error_message varchar2(30); 
+	procedure show_customers(e_refcursor out sys_refcursor,error_message OUT VARCHAR2)  
+	is  
+	begin  
+		open e_refcursor for  
+		select * from customers;  
+		EXCEPTION   
+	  	WHEN NO_DATA_FOUND THEN    
+	  	        error_message := 'No data found in table.';   
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+	end;  
+begin  
+	show_customers(v_refcursor,v_error_message);  
+	loop  
+		fetch v_refcursor into v_cid,v_name,v_telephone#,v_vists_made,v_LAST_VISIT_DATE;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_cid||' '||v_name||' '||v_telephone#||' '||v_vists_made||' '||v_LAST_VISIT_DATE);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+show errors 
+
+Table2)
+set serveroutput on
+declare   
+	v_eid employees.eid%type;  
+	v_name employees.name%type;  
+	v_telephone# employees.telephone#%type;  
+	v_email employees.email%type;  
+	v_refcursor sys_refcursor;  
+	v_error_message varchar2(30); 
+	procedure show_employees(e_refcursor out sys_refcursor,error_message OUT VARCHAR2)  
+	is  
+	begin  
+		open e_refcursor for  
+		select * from employees;  
+		EXCEPTION   
+	  	WHEN NO_DATA_FOUND THEN    
+	  	        error_message := 'No data found in table.';   
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+	end;  
+begin  
+	show_employees(v_refcursor,v_error_message);  
+	loop  
+		fetch v_refcursor into v_eid,v_name,v_telephone#,v_email;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_eid||' '||v_name||' '||v_telephone#||' '||v_email);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+show errors 
+
+Table 3)
+set serveroutput on
+declare   
+	v_log# logs.LOG#%type;  
+	v_name logs.USER_NAME%type;  
+	v_OPERATION logs.OPERATION%type;  
+	v_OP_TIME logs.OP_TIME%type;  
+	v_TABLE_NAME logs.TABLE_NAME%type; 
+	v_TUPLE_PKEY logs.TUPLE_PKEY%type; 
+	v_refcursor sys_refcursor;  
+	v_error_message varchar2(30); 
+	procedure show_logs(e_refcursor out sys_refcursor,error_message OUT VARCHAR2)  
+	is  
+	begin  
+		open e_refcursor for  
+		select * from logs;  
+		EXCEPTION   
+	  	WHEN NO_DATA_FOUND THEN    
+	  	        dbms_output.put_line('no data found');    
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+	end;  
+begin  
+	show_logs(v_refcursor,v_error_message);  
+	loop  
+		fetch v_refcursor into v_log#,v_name,v_OPERATION,v_OP_TIME,v_TABLE_NAME,v_TUPLE_PKEY;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_log#||' '||v_name||' '||v_OPERATION||' '||v_OP_TIME||' '||v_TABLE_NAME||' '||v_TUPLE_PKEY);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+show errors
+
+Table4)
+set serveroutput on
+declare   
+	v_pid products.PID%type;  
+	v_name products.name%type;  
+	v_QOH products.QOH%type;  
+	v_QOH_THRESHOLD products.QOH_THRESHOLD%type;  
+	v_REGULAR_PRICE products.REGULAR_PRICE%type; 
+	v_DISCNT_RATE products.DISCNT_RATE%type; 
+	v_refcursor sys_refcursor;  
+	v_error_message varchar2(30); 
+	procedure show_products(e_refcursor out sys_refcursor,error_message OUT VARCHAR2)  
+	is  
+	begin  
+		open e_refcursor for  
+		select * from products;  
+		EXCEPTION   
+	  	WHEN NO_DATA_FOUND THEN    
+	  	        error_message := 'No data found in table.';   
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+	end;  
+begin  
+	show_products(v_refcursor,v_error_message);  
+	loop  
+		fetch v_refcursor into v_pid,v_name,v_QOH,v_QOH_THRESHOLD,v_REGULAR_PRICE,v_DISCNT_RATE;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_pid||' '||v_name||' '||v_QOH||' '||v_QOH_THRESHOLD||' '||v_REGULAR_PRICE||' '||v_DISCNT_RATE);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+show_errors
+
+Table 5)
+set serveroutput on;
+declare   
+	v_PUR# purchases.PUR#%type;  
+	v_EID purchases.EID%type;  
+	v_pid purchases.pid%type;  
+	v_cid purchases.cid%type;  
+	v_PUR_DATE purchases.PUR_DATE%type; 
+	v_QTY purchases.QTY%type; 
+	v_UNIT_PRICE purchases.UNIT_PRICE%type; 
+	v_TOTAL purchases.TOTAL%type; 
+	v_SAVING purchases.SAVING%type; 
+	v_refcursor sys_refcursor;  
+	v_error_message varchar2(30); 
+	procedure show_purchases(e_refcursor out sys_refcursor,error_message OUT VARCHAR2)  
+	is  
+	begin  
+		open e_refcursor for  
+		select * from purchases;  
+		EXCEPTION   
+	  	WHEN NO_DATA_FOUND THEN    
+	  	        error_message := 'No data found in table.';   
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+	end;  
+begin  
+	show_purchases(v_refcursor,v_error_message);  
+	loop  
+		fetch v_refcursor into v_PUR#,v_EID,v_pid,v_cid,v_PUR_DATE,v_QTY,v_UNIT_PRICE,v_TOTAL,v_SAVING;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_PUR#||' '||v_EID||' '||v_pid||' '||v_cid||' '||v_PUR_DATE||' '||v_QTY||' '||v_UNIT_PRICE||' '||v_TOTAL||' '||v_SAVING);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+show errors
+
+Q3)
+
+set serveroutput on
+declare  
+        v_name varchar(20); 
+        v_pid purchases.pid%type; 
+        v_pur_date purchases.pur_date%type; 
+        v_qty purchases.qty%type; 
+        v_unit_price purchases.unit_price%type; 
+        v_total purchases.total%type; 
+        v_refcursor sys_refcursor; 
+	v_error_message varchar2(500);
+        procedure purchases_made(e_refcursor out sys_refcursor, mycid purchases.cid%type,error_message OUT VARCHAR2) 
+        is 
+        begin 
+        open e_refcursor for  
+        select name,pid,pur_date,qty,unit_price,total from purchases join customers on purchases.cid=customers.cid where purchases.cid=mycid;  
+	
+	EXCEPTION   
+	WHEN NO_DATA_FOUND THEN    
+	  	        error_message := 'No data found in table.';   
+        WHEN OTHERS THEN   
+        		error_message := 'Unexpected error';   
+        RAISE;   
+        end; 
+        begin  
+	purchases_made(v_refcursor,'c000',v_error_message);  
+	loop  
+		fetch v_refcursor into  v_name,v_pid, v_pur_date, v_qty,v_unit_price,v_total;  
+		exit when v_refcursor%notfound;  
+		dbms_output.put_line(v_name||' '||v_pid||' '||v_pur_date||' '||v_qty);  
+	end loop;  
+	close v_refcursor;  
+end; 
+/
+
+Q4)
+set serveroutput on
+declare 
+mycount numeric(5); 
+function no_of_customers( 
+mypid in purchases.pid%type) return number is 
+num_of_customers number; 
+begin 
+select distinct count(*) into num_of_customers from purchases where pid=mypid; 
+return(num_of_customers); 
+end; 
+begin 
+mycount := no_of_customers('p004'); 
+dbms_output.put_line('Number of customers who have visited at least ' || mycount); 
+end; 
+/
+
+Q5)
+CREATE OR REPLACE procedure add_customer(c_id IN customers.cid%type, c_name in customers.name%type, c_telephone# in customers.TELEPHONE#%type)  
+is   
+begin  
+insert into customers values (c_id, c_name, c_telephone#, 1, to_char(SYSDATE, 'DD-MON-YYYY')); 
+end; 
+/ 
+Q6)
+set serveroutput on
+declare    
+calculatesaving number(8,2);   
+v_qoh number(4); 
+v_refcursor sys_refcursor;   
+procedure add_purchase(e_id in purchases.EID%type, p_id in purchases.pid%type, c_id in purchases.cid%type   
+, pur_qty in purchases.QTY%type, pur_unit_price in purchases.UNIT_PRICE%type,ref_cursor out sys_refcursor)   
+is   
+begin   
+open ref_cursor for   
+select REGULAR_PRICE,QOH from products where pid=p_id;   
+fetch v_refcursor into calculatesaving,v_qoh;  
+if(pur_qty>v_qoh) then 
+dbms_output.put_line('Insufficient quantity in stock.'); 
+else 
+insert into purchases values (pur#.nextval, e_id, p_id, c_id,  to_char(SYSDATE, 'DD-MON-YYYY'), pur_qty, pur_unit_price, pur_unit_price*pur_qty   
+,(pur_unit_price*pur_qty)-calculatesaving);   
+end if; 
+end;   
+begin 
+loop  
+add_purchase('e03', 'p008', 'c003',6,211.65,v_refcursor); 
+fetch v_refcursor into calculatesaving,v_qoh;  
+exit when v_refcursor%notfound;     
+		dbms_output.put_line(calculatesaving||' '||v_qoh );     
+		end loop;   
+	close v_refcursor;    
+end; 
+/
+
+Trigger 1)
+create or replace trigger QOH_update after insert on purchases for each row          
+
+declare          
+
+new_qoh number(4);          
+
+qoh_products number(4);       
+
+QOH_THRESHOLD_products number(4);       
+
+v_refcursor sys_refcursor;    
+
+last_PUR_DATE date;    
+
+new_date date;    
+
+begin          
+
+new_qoh:= :new.QTY;          
+
+dbms_output.put_line(new_qoh||' '||:new.pid);         
+
+open v_refcursor for          
+
+select qoh,QOH_THRESHOLD from products where pid=:new.pid;          
+
+fetch v_refcursor into qoh_products,QOH_THRESHOLD_products;         
+
+close v_refcursor;        
+
+dbms_output.put_line(qoh_products);         
+
+if((qoh_products-new_qoh)<QOH_THRESHOLD_products) then       
+
+dbms_output.put_line('The current qoh of the product is below the required threshold and new supply is required'||' '||QOH_THRESHOLD_products);      
+
+update products set qoh=(QOH_THRESHOLD_products+10) where pid= :new.pid;    
+
+new_qoh:=(QOH_THRESHOLD_products+10);    
+
+dbms_output.put_line('the new value of the qoh of the product after new supply'||''||new_qoh);      
+
+else       
+
+update products set qoh=qoh_products-new_qoh where pid= :new.pid;     
+
+end if;    
+
+last_PUR_DATE:=:old.PUR_DATE;   
+
+new_date:=:new.PUR_DATE;   
+
+dbms_output.put_line('purchases'||''||last_PUR_DATE||''||new_date);  
+
+if(last_PUR_DATE!=new_date) then    
+
+dbms_output.put_line('purchases');      
+
+update customers set VISITS_MADE=(VISITS_MADE+1),LAST_VISIT_DATE=:old.PUR_DATE where cid=:new.cid;    
+
+end if;    
+
+end; 
+
+Trigger 2)
+
+create or replace trigger VISIT_made before insert on purchases for each row               
+
+declare               
+
+last_PUR_DATE date;         
+
+new_date date;      
+
+refcursor sys_refcursor;     
+
+begin     
+
+open refcursor for      
+
+select *from(select PUR_DATE from purchases   where cid=:new.cid order by PUR_DATE desc) where rownum<=1;    
+
+fetch refcursor into last_PUR_DATE;      
+
+close refcursor;  
+
+new_date:= :new.PUR_DATE;   
+
+dbms_output.put_line('purchases'||''||last_PUR_DATE||''||new_date);       
+
+if(last_PUR_DATE!=new_date) then         
+
+dbms_output.put_line('purchases');           
+
+update customers set VISITS_MADE=(VISITS_MADE+1),LAST_VISIT_DATE=last_PUR_DATE where cid=:new.cid;         
+
+end if;     
+
+end; 
+
+Q7)
+Trigger1)
+create or replace trigger customers_insert after insert on Customers for each row      
+declare  
+login_name Varchar(10); 
+v_refcursor sys_refcursor; 
+begin    
+open v_refcursor for            
+select USERNAME from user_users;           
+fetch v_refcursor into login_name;           
+close v_refcursor;  
+insert into logs values       
+(log#.nextval, login_name, 'insert',to_char(SYSDATE, 'DD-MON-YYYY'),'Customers', :new.cid);       
+end;    
+/  
+
+Trigger2)
+create or replace trigger last_visit_date after update of last_visit_date on Customers for each row 
+declare  
+login_name Varchar(10); 
+v_refcursor sys_refcursor; 
+begin    
+open v_refcursor for            
+select USERNAME from user_users;           
+fetch v_refcursor into login_name;           
+close v_refcursor;  
+insert into logs values  
+(log#.nextval, login_name, 'update',to_char(SYSDATE, 'DD-MON-YYYY'),'Customers', :new.CID);  
+end;  
+/
+
+Trigger3)
+create or replace trigger visits_made after update of visits_made on Customers for each row  
+declare  
+login_name Varchar(10); 
+v_refcursor sys_refcursor; 
+begin    
+open v_refcursor for            
+select USERNAME from user_users;           
+fetch v_refcursor into login_name;           
+close v_refcursor; 
+insert into logs values   
+(log#.nextval, login_name, 'update',to_char(SYSDATE, 'DD-MON-YYYY'),'Customers', :new.CID);   
+end; 
+/ 
+
+Trigger4)
+create or replace trigger purchases_insert after insert on purchases for each row      
+begin       
+insert into logs values       
+(log#.nextval, user, 'insert',to_char(SYSDATE, 'DD-MON-YYYY'),'purchases', :new.pur#);       
+end;  
+/
+
+Trigger5)
+create or replace trigger QOH after update of QOH on products for each row   
+begin    
+insert into logs values    
+(log#.nextval, user, 'update',to_char(SYSDATE, 'DD-MON-YYYY'),'Productss', :new.pid);    
+end; 
+/  
